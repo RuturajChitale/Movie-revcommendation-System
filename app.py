@@ -3,6 +3,8 @@ import pickle
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import os
+import gdown
 
 
 movie_list = pickle.load(open("movies.pkl", "rb"))
@@ -18,6 +20,14 @@ except (FileNotFoundError, KeyError):
 
 FALLBACK_POSTER = "https://placehold.co/300x450?text=No+Image"
 
+def download_file(file_id, output):
+    if not os.path.exists(output):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output, quiet=False)
+
+download_file("1PH19sUma5yalGembsV_7mnbl6oyYZBtC", "tmdb_5000_movies.csv")
+download_file("1AN4PDTUO_geZf622S-31cy5oWKjjDXw0", "tmdb_5000_credits.csv")
+download_file("1RXy5qPEALEaQK3v7bczIRudzTL4v-_dO", "similarity.pkl")
 
 def _session_with_retries():
     session = requests.Session()
